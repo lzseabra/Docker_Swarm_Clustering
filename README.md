@@ -1,31 +1,60 @@
-Role Name
+🚀 Ansible Role: install-docker
 =========
+Esta role instala o **Docker** em servidores Linux e configura automaticamente um cluster **Docker Swarm**, com 1 manager e múltiplos workers.
 
-A brief description of the role goes here.
+---
 
-Requirements
+## 📂 Estrutura do projeto
+
+roles/install-docker/
+├── defaults/
+│ └── main.yml
+├── tasks/
+│ ├── main.yml
+│ ├── swarm_init.yml
+│ └── swarm_join.yml
+└── meta/
+└── main.yml
+
+# ⚙️ Requisitos
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Python 3 no host
+- Módulos Ansible:
+  - [`community.docker`](https://docs.ansible.com/ansible/latest/collections/community/docker/index.html)
 
-Role Variables
---------------
+Instale a collection caso ainda não tenha:
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```bash
+ansible-galaxy collection install community.docker
 
-Dependencies
-------------
+invenory/hosts.ini:
+-------------------
+[manager]
+node01 ansible_host=<Ajuste para o ip da rede>
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+[workers]
+node02 ansible_host=<Ajuste para o ip da rede>
+node03 ansible_host=<Ajuste para o ip da rede>
+
+[docker:children]
+manager
+workers
+
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+- hosts: docker
+  become: true
+  roles:
+    - install-docker
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+🚀 Como usar
+------------
+
+ansible-playbook -i inventory/hosts.ini playbooks/site.yml
+
 
 License
 -------
@@ -37,4 +66,4 @@ Author Information
 
 An optional section for the role authors to include contact information, or a website (HTML is not allowed).
 # Docker_Swarm_Clustering
-# Docker_Swarm_Clustering
+
