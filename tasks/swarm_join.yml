@@ -1,0 +1,7 @@
+---
+- name: Join workers no Cluster
+  community.docker.docker_swarm:
+    state: join 
+    join_token: "{{ hostvars[groups['manager'][0]].swarm_worker_token }}"
+    remote_addrs: ["{{ hostvars[groups['manager'][0]].ansible_host }}"]
+...

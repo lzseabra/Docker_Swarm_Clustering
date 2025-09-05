@@ -1,0 +1,12 @@
+---
+# vars file for install-docker
+packages:
+  - curl
+  - wget
+  - tcpdump
+  - vim 
+  - ncat
+  - python3
+  - pip
+  - python3-docker
+  - nfs-common

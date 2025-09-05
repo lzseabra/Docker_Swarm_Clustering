@@ -1,0 +1,38 @@
+---
+# tasks file for install-docker
+- name: APT CACHE | System Cache 
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: APT CACHE | System Cache 
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+
+- name: APT INSTALL | Instalando {{ packages }}
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: latest
+
+
+- name: DOCKER | Instalando docker
+  block:
+    - name: valida se docker esta Instalado 
+      ansible.builtin.command: "docker --version"
+  rescue:
+    - name: Instala docker
+      ansible.builtin.shell:
+        "curl -fsSL https://get.docker.com | sh"
+
+- name: SWARM INIT | Iniciando o cluster
+  ansible.builtin.import_tasks:
+    file: swarm_init.yml
+  when: inventory_hostname in groups['manager']
+
+- name: JOIN | Add workers in cluster
+  ansible.builtin.import_tasks:
+    file: swarm_join.yml
+  when: inventory_hostname in groups['workers']
+    
+
+...

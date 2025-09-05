@@ -1,0 +1,19 @@
+---
+- name: Iniciando Cluster Swarm
+  community.docker.docker_swarm:
+    state: present
+    advertise_addr: "{{ ansible_host }}"
+  run_once: true
+
+- name: Obter token de Worker 
+  ansible.builtin.command: docker swarm join-token -q worker 
+  register: swarm_worker_token
+  changed_when: false
+  run_once: true
+
+- name: Salva token global 
+  set_fact:
+    swarm_worker_token: "{{ swarm_worker_token.stdout }}"
+  delegate_to: localhost
+  run_once: true
+...
